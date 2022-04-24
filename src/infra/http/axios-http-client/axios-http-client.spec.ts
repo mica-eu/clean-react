@@ -3,19 +3,18 @@ import { faker } from '@faker-js/faker'
 import { AxiosHttpClient } from './axios-http-client'
 
 jest.mock('axios')
+const mockedAxios = axios as jest.Mocked<typeof axios>
 
 const makeSut = (): AxiosHttpClient => {
   return new AxiosHttpClient()
 }
 
 describe('AxiosHttpClient', () => {
-  test('Should call axios with correct url', async () => {
-    const mockedAxios = jest.spyOn(axios, 'post')
-      .mockImplementationOnce(async () => await Promise.resolve())
+  test('Should call axios with correct url and verb', async () => {
     const url = faker.internet.url()
     const sut = makeSut()
     await sut.post({ url })
-    expect(mockedAxios).toBeCalledTimes(1)
-    expect(mockedAxios).toHaveBeenCalledWith(url)
+    expect(mockedAxios.post).toBeCalledTimes(1)
+    expect(mockedAxios.post).toHaveBeenCalledWith(url)
   })
 })
